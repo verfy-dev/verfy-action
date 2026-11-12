@@ -33,6 +33,31 @@ jobs:
 
 Exit codes: 0 all tools match, 1 a tool is new or gone, 2 a tool changed, 3 a server did not answer.
 
+The same file is in the Verfy repository: [examples/ci/verfy.yml](https://github.com/anvarbekovjavohir277-dot/verfy-releases/blob/main/examples/ci/verfy.yml).
+
+### Also pin the server's code, and show the result in code scanning
+
+The lock also records the package version and the registry's hash of each server that npx, uvx or pipx starts with an exact version, so a new release fails the check even when no tool changed. `require-pinned` fails a server started with no exact version, and `sarif` writes the result for GitHub code scanning:
+
+```yaml
+permissions:
+  contents: read
+  security-events: write
+jobs:
+  lock:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: anvarbekovjavohir277-dot/verfy-action@v1
+        with:
+          require-pinned: "true"
+          sarif: verfy.sarif
+      - uses: github/codeql-action/upload-sarif@v4
+        if: always()
+        with:
+          sarif_file: verfy.sarif
+```
+
 ## Badge
 
 Running this check? You can say so in your README:
@@ -52,7 +77,9 @@ The badge states one fact, which you put there yourself: this repository commits
 | `config` | `.mcp.json` | MCP config whose servers are checked |
 | `lock` | `verfy.lock` | the committed lock file |
 | `servers` | all | space-separated server names to check |
-| `version` | `0.18.0` | Verfy CLI version from PyPI |
+| `require-pinned` | `false` | `"true"` fails a server started with no exact package version |
+| `sarif` | none | also write the result as SARIF 2.1.0 to this path |
+| `version` | `0.20.0` | Verfy CLI version from PyPI |
 | `python-version` | `3.13` | Python that runs Verfy (3.10 or newer) |
 
 ## Remote servers and keys
@@ -69,7 +96,7 @@ Stdio servers are started from their command, as your MCP client would; pin pack
           MCP_TOKEN: ${{ secrets.MCP_TOKEN }}
 ```
 
-Verfy does not follow redirects, so a key only goes to the address in the config, and it never prints header values. Servers that only speak the older SSE transport are not supported yet.
+Verfy does not follow redirects, so a key only goes to the address in the config, and it never prints header values. A server that only speaks the older SSE transport works too: Verfy falls back to it by itself. OAuth sign-in is not supported yet, so use a key.
 
 ## Limits
 
