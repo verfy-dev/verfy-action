@@ -79,7 +79,7 @@ The badge states one fact, which you put there yourself: this repository commits
 | `servers` | all | space-separated server names to check |
 | `require-pinned` | `false` | `"true"` fails a server started with no exact package version |
 | `sarif` | none | also write the result as SARIF 2.1.0 to this path |
-| `version` | `0.21.0` | Verfy CLI version from PyPI |
+| `version` | `0.22.0` | Verfy CLI version from PyPI |
 | `python-version` | `3.13` | Python that runs Verfy (3.10 or newer) |
 
 ## Remote servers and keys
