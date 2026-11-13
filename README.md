@@ -4,7 +4,7 @@ Fail the pull request when an MCP tool your coding agents use changed since you 
 
 An MCP server can change a tool's description or input schema in any release, and that text goes straight into your agent's context. This action reads every tool your MCP config serves, compares each definition with the SHA-256 pins in your committed `verfy.lock`, and fails the check if one changed, with the diff in the log and as an annotation on the pull request.
 
-It runs the [Verfy CLI](https://github.com/anvarbekovjavohir277-dot/verfy) (MIT). Website and docs: https://verfy.dev
+It runs the [Verfy CLI](https://github.com/verfy-dev/verfy) (MIT). Website and docs: https://verfy.dev
 
 ## Use it
 
@@ -28,12 +28,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: anvarbekovjavohir277-dot/verfy-action@v1
+      - uses: verfy-dev/verfy-action@v1
 ```
 
 Exit codes: 0 all tools match, 1 a tool is new or gone, 2 a tool changed, 3 a server did not answer.
 
-The same file is in the Verfy repository: [examples/ci/verfy.yml](https://github.com/anvarbekovjavohir277-dot/verfy-releases/blob/main/examples/ci/verfy.yml).
+The same file is in the Verfy repository: [examples/ci/verfy.yml](https://github.com/verfy-dev/verfy-releases/blob/main/examples/ci/verfy.yml).
 
 ### Also pin the server's code, and show the result in code scanning
 
@@ -48,7 +48,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: anvarbekovjavohir277-dot/verfy-action@v1
+      - uses: verfy-dev/verfy-action@v1
         with:
           require-pinned: "true"
           sarif: verfy.sarif
@@ -79,7 +79,7 @@ The badge states one fact, which you put there yourself: this repository commits
 | `servers` | all | space-separated server names to check |
 | `require-pinned` | `false` | `"true"` fails a server started with no exact package version |
 | `sarif` | none | also write the result as SARIF 2.1.0 to this path |
-| `version` | `0.23.0` | Verfy CLI version from PyPI |
+| `version` | `0.23.1` | Verfy CLI version from PyPI |
 | `python-version` | `3.13` | Python that runs Verfy (3.10 or newer) |
 
 ## Remote servers and keys
@@ -91,7 +91,7 @@ Stdio servers are started from their command, as your MCP client would; pin pack
 ```
 
 ```yaml
-      - uses: anvarbekovjavohir277-dot/verfy-action@v1
+      - uses: verfy-dev/verfy-action@v1
         env:
           MCP_TOKEN: ${{ secrets.MCP_TOKEN }}
 ```
@@ -100,6 +100,6 @@ Verfy does not follow redirects, so a key only goes to the address in the config
 
 ## Limits
 
-A passing check means the definitions match what someone reviewed and locked, not that they are safe. A server can serve different definitions to different clients, so keep the lock on developers' machines too. More in [SECURITY_LIMITATIONS.md](https://github.com/anvarbekovjavohir277-dot/verfy-releases/blob/main/docs/SECURITY_LIMITATIONS.md). Report a vulnerability or a way past Verfy privately through the [security policy](https://github.com/anvarbekovjavohir277-dot/verfy-releases/blob/main/SECURITY.md).
+A passing check means the definitions match what someone reviewed and locked, not that they are safe. A server can serve different definitions to different clients, so keep the lock on developers' machines too. More in [SECURITY_LIMITATIONS.md](https://github.com/verfy-dev/verfy-releases/blob/main/docs/SECURITY_LIMITATIONS.md). Report a vulnerability or a way past Verfy privately through the [security policy](https://github.com/verfy-dev/verfy-releases/blob/main/SECURITY.md).
 
-MIT license. The Verfy name and logo are covered by the [trademark policy](https://github.com/anvarbekovjavohir277-dot/verfy-releases/blob/main/TRADEMARKS.md).
+MIT license. The Verfy name and logo are covered by the [trademark policy](https://github.com/verfy-dev/verfy-releases/blob/main/TRADEMARKS.md).
